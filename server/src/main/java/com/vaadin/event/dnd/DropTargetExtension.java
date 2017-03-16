@@ -16,6 +16,7 @@
 package com.vaadin.event.dnd;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.ClientConnector;
@@ -42,22 +43,46 @@ public class DropTargetExtension<T extends AbstractComponent> extends
      *         Component to be extended.
      */
     public DropTargetExtension(T target) {
-        registerRpc((DropTargetRpc) (types, data, dropEffect, dataSourceId) -> {
-            DragSourceExtension dragSource = null;
 
-            ClientConnector connector = getUI().getConnectorTracker()
-                    .getConnector(dataSourceId);
-            if (connector != null && connector instanceof DragSourceExtension) {
-                dragSource = (DragSourceExtension) connector;
-            }
+        registerDropTargetRpc(target);
 
+        super.extend(target);
+    }
+
+    /**
+     * Register server RPC.
+     *
+     * @param target
+     *         Extended component.
+     */
+    protected void registerDropTargetRpc(T target) {
+        registerRpc((DropTargetRpc) (types, data, dropEffect, dragSourceId) -> {
             DropEvent<T> event = new DropEvent<>(target, types, data,
-                    dropEffect, dragSource);
+                    dropEffect, getDragSource(dragSourceId).orElse(null));
 
             fireEvent(event);
         });
+    }
 
-        super.extend(target);
+    /**
+     * Get drag source extension.
+     *
+     * @param dragSourceId
+     *         Connector id of the extension.
+     * @return Drag source extension if exists with the given connector id,
+     * otherwise an empty optional.
+     */
+    protected Optional<DragSourceExtension<AbstractComponent>> getDragSource(
+            String dragSourceId) {
+        DragSourceExtension<AbstractComponent> dragSource = null;
+
+        ClientConnector connector = getUI().getConnectorTracker()
+                .getConnector(dragSourceId);
+        if (connector != null && connector instanceof DragSourceExtension) {
+            dragSource = (DragSourceExtension<AbstractComponent>) connector;
+        }
+
+        return Optional.ofNullable(dragSource);
     }
 
     /**
