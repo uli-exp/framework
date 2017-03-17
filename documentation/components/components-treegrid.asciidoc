@@ -1,0 +1,48 @@
+---
+title: TreeGrid
+order: 25
+layout: page
+---
+
+[[components.menubar]]
+= TreeGrid
+
+ifdef::web[]
+[.sampler]
+image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/grids-and-trees/treegrid"]
+endif::web[]
+
+=== Under development
+
+The [classname]#TreeGrid# component is currently being developed and only available in the Framework 8.1 prerelease versions, starting from 8.1.0.alpha1.
+
+[[components.treegrid.overview]]
+== Overview
+
+[classname]#TreeGrid# is for displaying hierarchical tabular data laid out in rows and columns.
+It is otherwise identical to the [classname]#Grid# component, but it adds the possibility to show
+hierarchical data, allowing the user to expand and collapse nodes to show or hide data.
+
+See the documentation for <<dummy/../../../framework/components/components-grid.asciidoc#components.grid,"Grid">> for all the shared features between [classname]#Grid# and [classname]#TreeGrid#.
+
+[[figure.components.treegrid.basic]]
+.A [classname]#TreeGrid#
+image::img/treegrid-basic.png
+
+[[components.treegrid.data]]
+== Binding to Data
+
+[classname]#TreeGrid# is used by binding it to a hierarchical data provider. The data provider can be based on in-memory or back end data. For in-memory data, the [classname]#InMemoryHierarchicalDataProvider# can be used, and for loading data from a back end, you need to implement two callback methods from the [interface]#HierarchicalDataProvider# interface. Usage of both data providers is described in
+<<dummy/../../../framework/datamodel/datamodel-hierarchical.asciidoc#datamodel.hierarchical,"Hierarchical Data">>.
+
+Populating a [classname]#TreeGrid# with in-memory data can be done as follows
+
+[source, java]
+----
+
+
+TreeGrid<Project> treeGrid = new TreeGrid<>();
+treeGrid.addColumn(Project::getName); // first column will be the default hierarchy column
+treeGrid.addColumn(Project::getHours);
+treeGrid.addColumn(Project::getLastModified);
+----

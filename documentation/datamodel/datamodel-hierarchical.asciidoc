@@ -1,0 +1,8 @@
+---
+title: Hierarchical Data
+order: 7
+layout: page
+---
+
+[[datamodel.dataproviders]]
+= Hierarchical Data
